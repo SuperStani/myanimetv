@@ -4,6 +4,6 @@
 /chat/chat/my_profile.session-journal
 /downloader/my_profile.session
 /downloader/ubot.session
-/config.php
-/router.php
+config.php
+router.php
 /databases
