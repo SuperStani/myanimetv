@@ -1,0 +1,9 @@
+# exclude everything except directory foo/bar
+
+/chat/my_profile.session
+/chat/chat/my_profile.session-journal
+/downloader/my_profile.session
+/downloader/ubot.session
+/config.php
+/router.php
+/databases
