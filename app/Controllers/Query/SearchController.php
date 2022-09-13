@@ -161,50 +161,31 @@ class SearchController extends QueryController {
         return $this->query->message->edit("*Seleziona il numero di episodi per la ricerca*", $menu);
     }
 
-    public function byGenres() {
-        /*$id = explode("_", $bot->cbdata)[1];
-        //...ADD/REMOVE genres
-        $row = $bot->conn->prepare("SELECT genres_id FROM generi_cercati WHERE genres_id = :id AND by_user_id = :user");
-        $row->bindParam(":id", $id);
-        $row->bindParam(":user", $bot->userID);
-        $row->execute();
-        if($row->rowCount()){ //...Remove
-            $delete = $bot->conn->prepare("DELETE FROM generi_cercati WHERE genres_id = :id AND by_user_id = :user");
-            $delete->bindParam(":id", $id);
-            $delete->bindParam(":user", $bot->userID);
-            $delete->execute();
-        }else{ //...ADD
-            $add = $bot->conn->prepare("INSERT INTO generi_cercati SET genres_id = :id, by_user_id = :user");
-            $add->bindParam(":id", $id);
-            $add->bindParam(":user", $bot->userID);
-            $add->execute();
+    public function byGenres($genre = null, $search_id = null) {
+        if(!$search_id) 
+            $search_id = $this->conn->wquery("INSERT INTO anime_searchs SET user = ?", $this->user->id);
+        
+        if($genre) {
+            $check = isset($this->conn->rquery("SELECT genre FROM search_genres WHERE genre = ? AND s_id = ?", $genre, $search_id)->genre);
+            if($check)
+                $this->conn->wquery("DELETE FROM search_genres WHERE genre = ? AND s_id = ?", $genre, $search_id);
+            else
+                $this->conn->wquery("INSERT INTO search_genres SET genre = ?, s_id = ?", $genre, $search_id);
         }
-        $q = $bot->conn->query("SELECT id, nome FROM generi");
-        $x = 0;
-        $y = 0;
-        $selezionati = [];
-        foreach($q as $ad){
-            $genres_id = $ad["id"];
-            $row = $bot->conn->prepare("SELECT genres_id FROM generi_cercati WHERE genres_id = :id AND by_user_id = :user");
-            $row->bindParam(":id", $genres_id);
-            $row->bindParam(":user", $bot->userID);
-            $row->execute();
-            if($row->rowCount()){
-                $txt = $ad["nome"]." 🔵";
-                $selezionati[] = "#".$ad["nome"];
-            }else{
-                $txt = $ad["nome"]." 🔴";
-            }
-            if($x < 2){
-                $menu[$y][] = ["text" => $txt, "callback_data" => "search:srcgenere_".$ad["id"]];
-                $x++;
-            }else{
-                ++$y;
-                $x = 1;
-                $menu[$y][] = ["text" => $txt, "callback_data" => "search:srcgenere_".$ad["id"]];
-            }
+        $q = $this->conn->rqueryAll("SELECT id, name FROM genres");
+        $x = 0; $y = 0;
+        foreach($q as $g){
+            $check = isset($this->conn->rquery("SELECT genre FROM search_genres WHERE genre = ? AND s_id = ?", $g->id, $search_id)->genre);
+            if($x < 2){ $x++;}
+            else { $x = 1; $y++;}
+            $menu[$y][] = ["text" => "$g->name " .( ($check) ? '🔵' : '🔴' ), "callback_data" => "Search:byGenres|$g->id|$search_id"];
         }
-        $menu[] = [["text" => "✅ AVVIA RICERCA", "callback_data" => "scroll:genre_0"]];
-        $menu[] = [["text" => "◀️ INDIETRO", "callback_data" => "search:home"]];*/
+        if($genre) {
+            $webapp = cfg::get("webapp")."search/genres/".$this->user->id;
+            $menu[] = [["text" => get_button('it', 'search_results'), "web_app" => ["url" => $webapp]]];
+        }
+        $menu[] = [["text" => get_button('it', 'back'), "callback_data" => "Search:home|0|1"]];
+        $this->query->alert();
+        return $this->query->message->edit("Seleziona i generi:", $menu);
     }
 }
