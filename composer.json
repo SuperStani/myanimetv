@@ -1,0 +1,34 @@
+{
+    "name": "superstani/superbot",
+    "type": "library",
+    "description": "PHP Telegram bot",
+    "keywords": ["telegram", "bot", "api"],
+    "license": "MIT",
+    "homepage": "https://github.com/php-telegram-bot/core",
+    "support": {
+        "issues": "https://github.com/php-telegram-bot/core/issues",
+        "source": "https://github.com/php-telegram-bot/core"
+    },
+    "authors": [
+        {
+            "name": "Stanislav",
+            "email": "superstani.dev@gmail.com",
+            "role": "Developer"
+        }
+    ],
+
+    "autoload": {
+        "psr-4": {
+            "superbot\\App\\": "app/",
+            "superbot\\Telegram\\": "vendor/superbot/Telegram/src/",
+            "superbot\\Database\\": "vendor/superbot/Database/"
+        }
+    },
+
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "process-timeout": 3600
+    }
+}
