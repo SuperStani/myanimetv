@@ -1,19 +1,15 @@
 {
     "name": "superstani/superbot",
     "type": "library",
-    "description": "PHP Telegram bot",
+    "description": "MY ANIME TV",
     "keywords": ["telegram", "bot", "api"],
     "license": "MIT",
-    "homepage": "https://github.com/php-telegram-bot/core",
-    "support": {
-        "issues": "https://github.com/php-telegram-bot/core/issues",
-        "source": "https://github.com/php-telegram-bot/core"
-    },
+    "homepage": "https://github.com/SuperStani/myanimetv",
     "authors": [
         {
             "name": "Stanislav",
             "email": "superstani.dev@gmail.com",
-            "role": "Developer"
+            "role": "Creator"
         }
     ],
 
