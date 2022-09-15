@@ -181,7 +181,7 @@ class SearchController extends QueryController {
             $menu[$y][] = ["text" => "$g->name " .( ($check) ? '🔵' : '🔴' ), "callback_data" => "Search:byGenres|$g->id|$search_id"];
         }
         if($genre) {
-            $webapp = cfg::get("webapp")."search/genres/".$this->user->id;
+            $webapp = cfg::get("webapp")."search/genres/$search_id";
             $menu[] = [["text" => get_button('it', 'search_results'), "web_app" => ["url" => $webapp]]];
         }
         $menu[] = [["text" => get_button('it', 'back'), "callback_data" => "Search:home|0|1"]];

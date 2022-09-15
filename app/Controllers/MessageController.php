@@ -14,6 +14,6 @@ class MessageController extends Controller{
     }
 
     public function error(){
-        $this->message->reply("Vuoi cercare un anime?");
+        $this->message->reply("Il bot è in manutenzione\nLa disponibilità è prevista per le *16:00*");
     }
 }

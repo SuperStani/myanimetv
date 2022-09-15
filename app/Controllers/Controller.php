@@ -8,6 +8,6 @@ abstract class Controller {
         if($this->user->isAdmin())
             return $this->{$method}(...array_values($params));
         else 
-            return 0;
+        return $this->error();
     }
 }
