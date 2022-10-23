@@ -1,16 +1,20 @@
 <?php
 
 namespace superbot\App\Controllers;
+
+use app\Logger\Log;
 use superbot\Telegram\Message;
 use superbot\Telegram\User;
-use superbot\Database\DB;
+use superbot\Storage\DB;
+use superbot\Storage\CacheService;
 
 class MessageController extends Controller{
-    public function __construct($update) {
-        $this->message = new Message($update);
-        $this->conn = new DB();
-        $this->user = new User($update->from, $this->conn);
-        $update = null;
+    public function __construct(Message $message, User $user, DB $conn, CacheService $cacheService, Log $logger) {
+        $this->message = $message;
+        $this->conn = $conn;
+        $this->user = $user;
+        $this->logger = $logger;
+        $this->cache = $cacheService;
     }
 
     public function error(){

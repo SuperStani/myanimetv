@@ -1,13 +1,16 @@
 <?php
+
 namespace superbot\App\Controllers\Query;
+
 use superbot\App\Controllers\QueryController;
-use superbot\App\Config\GeneralConfigs as cfg;
-use superbot\Database\DB;
+use superbot\App\Configs\GeneralConfigs as cfg;
 use superbot\Telegram\Client;
 
-class AnimeController extends QueryController {
-    
-    public function view($id, $delete_message = 0) {
+class AnimeController extends QueryController
+{
+
+    public function view($id, $delete_message = 0)
+    {
         $query = "
             SELECT 
                 anime.*,
@@ -44,106 +47,106 @@ class AnimeController extends QueryController {
             WHERE a1.id = ?;
         ";
         $anime = $this->conn->rquery($query, $id);
-        if(isset($anime->id)) {
-            $webapp = cfg::get("webapp")."anime";
+        if (isset($anime->id)) {
+            $webapp = cfg::get("webapp") . "anime";
 
             $this->conn->wquery("INSERT INTO anime_history SET user = ?, anime = ?", $this->user->id, $id);
-    
+
             $g = $this->conn->rqueryAll("SELECT g.name FROM genres g INNER JOIN anime_genres ag ON g.id = ag.genre WHERE ag.anime = ?", $id);
-            $genres = "#".implode(', #', array_column($g, 'name'));
+            $genres = "#" . implode(', #', array_column($g, 'name'));
             $studios = $this->conn->rqueryAll("SELECT s.name FROM studios s INNER JOIN anime_studios ast ON s.id = ast.studio WHERE ast.anime = ?", $id);
             $studio_text = "";
-            if(count($studios))
-                foreach($studios as $studio)
-                    $studio_text = $studio_text."[$studio->name](t.me/myanimetvbetabot?start=studio_$studio->id) ";
-            
+            if (count($studios))
+                foreach ($studios as $studio)
+                    $studio_text = $studio_text . "[$studio->name](t.me/myanimetvbetabot?start=studio_$studio->id) ";
+
             $uploaded_episodes = $this->conn->rquery("SELECT COUNT(*) AS tot FROM episodes WHERE anime = ?", $id)->tot;
-            if($uploaded_episodes > 0) { 
-                if($uploaded_episodes == $anime->episodes) {
+            if ($uploaded_episodes > 0) {
+                if ($uploaded_episodes == $anime->episodes) {
                     $status = "Concluso";
                     $episodes = $anime->episodes;
-                }else {
+                } else {
                     $status = "In Corso";
-                    $episodes = $uploaded_episodes.'/'.str_replace("0", "??", $anime->episodes);
+                    $episodes = $uploaded_episodes . '/' . str_replace("0", "??", $anime->episodes);
                 }
-            }else {
+            } else {
                 $status = "Non rilasciato";
                 $episodes = str_replace("0", "??", $anime->episodes);
             }
-    
-            if($anime->season > 0) 
-                $season = "➥ _".["Prima", "Seconda", "Terza", "Quarta", "Quinta", "Sesta", "Settima", "Ottava", "Nona", "Decima"][$anime->season - 1]." stagione_\n";
+
+            if ($anime->season > 0)
+                $season = "➥ _" . ["Prima", "Seconda", "Terza", "Quarta", "Quinta", "Sesta", "Settima", "Ottava", "Nona", "Decima"][$anime->season - 1] . " stagione_\n";
             else
                 $season = "";
             $menu[] = [["text" => "1 ⭐️", "callback_data" => "Anime:vote|$id|1"], ["text" => "2 ⭐️", "callback_data" => "Anime:vote|$id|2"], ["text" => "3 ⭐️", "callback_data" => "Anime:vote|$id|3"], ["text" => "4 ⭐️", "callback_data" => "Anime:vote|$id|4"], ["text" => "5 ⭐️", "callback_data" => "Anime:vote|$id|5"]];
             $isSimulcast = isset($this->conn->rquery("SELECT anime FROM anime_simulcasts WHERE anime = ?", $id)->anime);
             $isPreferred = isset($this->conn->rquery("SELECT anime FROM anime_preferreds WHERE user = ? AND anime = ?", $this->user->id, $id)->anime);
             $menu[] = [
-                ["text" => ($isPreferred) ? '❤️' : '💔', "callback_data" => "Anime:love|$id|". (($isPreferred) ? '0' : '1')],
+                ["text" => ($isPreferred) ? '❤️' : '💔', "callback_data" => "Anime:love|$id|" . (($isPreferred) ? '0' : '1')],
                 ["text" => "📌", "callback_data" => "Bookmark:home|$id"]
             ];
-            if($this->user->isAdmin()) 
+            if ($this->user->isAdmin())
                 $menu[1][] = ["text" => "⚙️", "callback_data" => "Settings:home|$id|1"];
-            if($isSimulcast) {
+            if ($isSimulcast) {
                 $notifyActive = isset($this->conn->rquery("SELECT anime FROM anime_simulcast_notify WHERE anime = ? AND user = ?", $id, $this->user->id)->anime);
-                array_unshift($menu[1], ["text" => ($notifyActive) ? '🔔' : '🔕', "callback_data"  => "Anime:alert|$id|".(($notifyActive) ? '0' : '1')]);
+                array_unshift($menu[1], ["text" => ($notifyActive) ? '🔔' : '🔕', "callback_data"  => "Anime:alert|$id|" . (($notifyActive) ? '0' : '1')]);
             }
-            if($anime->category == "Movie") {
+            if ($anime->category == "Movie") {
                 $menu[] = [["text" => "▶️ GUARDA ORA ", "callback_data" => "Player:play|$id|1|1"]];
-            }else{
+            } else {
                 $haveView = $this->conn->rquery("SELECT episode FROM anime_views WHERE user = ? AND anime = ? AND viewed_on = (SELECT MAX(viewed_on) FROM anime_views WHERE user = ? AND anime = ?)", $this->user->id, $id, $this->user->id, $id)->episode;
-                if(isset($haveView)) 
+                if (isset($haveView))
                     $menu[] = [["text" => "⏯ RIPRENDI", "callback_data" => "Player:play|$id|$haveView|1|1"], ["text" => "💽 EPISODI", "callback_data" => "Anime:showEpisodes|$id|0"]];
                 else
                     $menu[] = [["text" => "💽 EPISODI", "callback_data" => "Anime:showEpisodes|$id|0"]];
             }
             $hasGroup = $this->conn->rquery("SELECT group_id FROM anime_groups WHERE anime = ?", $id)->group_id;
-            if(isset($hasGroup)) 
+            if (isset($hasGroup))
                 $menu[] = [["text" => get_button('it', 'correlated'), "web_app" => ["url" => "$webapp/$id/correlated"]], ["text" => get_button('it', 'similar1'), "web_app" => ["url" => "$webapp/$id/similar"]]];
             else
                 $menu[] = [["text" => get_button('it', 'similar'), "web_app" => ["url" => "$webapp/$id/similar"]]];
             $menu[] = [["text" => get_button('it', 'back'), "callback_data" => "Search:home|1"]];
             $aired = explode("-", $anime->aired_on);
-            $aired_on = $aired[2]." ".["", "Gennaio", "Febbraio", "Marzo", "Maggio", "Aprile", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"][(int)$aired[1]]." ".$aired[0];
+            $aired_on = $aired[2] . " " . ["", "Gennaio", "Febbraio", "Marzo", "Maggio", "Aprile", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"][(int)$aired[1]] . " " . $aired[0];
             $text = get_string('it', 'anime', $anime->name, $season, $anime->toprank, $status, $aired_on, $anime->category, $studio_text, $episodes, $anime->duration, $anime->synopsis_url, $anime->trailer, $genres, $anime->average, $anime->amount, $anime->total_views);
-            if($delete_message != 0) {
-                if($delete_message)
+            if ($delete_message != 0) {
+                if ($delete_message)
                     $this->query->message->delete();
-                return $this->query->message->reply_photo(cfg::get('domain').'resources/img/'.$anime->poster.'.jpg', $text, $menu);
-            }else{
-                return $this->query->message->edit_media(cfg::get('domain').'resources/img/'.$anime->poster.'.jpg', $text, $menu);
+                return $this->query->message->reply_photo(cfg::$domain . 'resources/img/' . $anime->poster . '.jpg', $text, $menu);
+            } else {
+                return $this->query->message->edit_media(cfg::$domain . 'resources/img/' . $anime->poster . '.jpg', $text, $menu);
             }
-        }else {
+        } else {
             $this->query->message->reply("Anime inesistente");
         }
-                
     }
 
-    public function vote($id, $vote) {
+    public function vote($id, $vote)
+    {
         $this->conn->wquery("DELETE FROM anime_votes WHERE user = ? AND anime = ?", $this->user->id, $id);
         $this->conn->wquery("INSERT INTO anime_votes SET user = ?, anime = ?, vote = ?", $this->user->id, $id, $vote);
         $this->query->alert("Hai votato $vote ⭐️!", true);
         $this->view($id);
     }
 
-    public function love($id, $vote) {
-        if($vote == 0) {
+    public function love($id, $vote)
+    {
+        if ($vote == 0) {
             $this->conn->wquery("DELETE FROM anime_preferreds WHERE user = ? AND anime = ?", $this->user->id, $id);
             $this->query->alert("💔");
-        }
-        else {
+        } else {
             $this->conn->wquery("INSERT INTO anime_preferreds SET user = ?, anime = ?", $this->user->id, $id);
             $this->query->alert("❤️");
         }
         $this->view($id);
     }
 
-    public function alert($id, $type) {
-        if($type == 0) {
+    public function alert($id, $type)
+    {
+        if ($type == 0) {
             $this->conn->wquery("DELETE FROM anime_simulcast_notify WHERE user = ? AND anime = ?", $this->user->id, $id);
             $this->query->alert("🔕");
-        }
-        else {
+        } else {
             $this->conn->wquery("INSERT INTO anime_simulcast_notify SET user = ?, anime = ?", $this->user->id, $id);
             $this->query->alert("Ti invierò una notifica ogni volta che uscirà un nuovo episodio di questo simulcast!", true);
         }
@@ -151,24 +154,26 @@ class AnimeController extends QueryController {
     }
 
 
-    public function showEpisodes($id, $delete_message) {
+    public function showEpisodes($id, $delete_message)
+    {
         $this->query->alert();
         $episodes = $this->conn->rqueryAll("SELECT episodeNumber FROM episodes WHERE anime = ? AND episodetype = 1 ORDER by episodeNumber", $id);
         $tot_ep = count($episodes);
-        if($tot_ep > 0){
-            $x = 0; $y = 0;
-            if($tot_ep > 50){
+        if ($tot_ep > 0) {
+            $x = 0;
+            $y = 0;
+            if ($tot_ep > 50) {
                 $end = 0;
-                while($end < $tot_ep){ //Ragruppamento episodi 1-50, 51-101 ecc...
+                while ($end < $tot_ep) { //Ragruppamento episodi 1-50, 51-101 ecc...
                     $list_index = $end;
                     $start = $end + 1;
                     $end += 50;
-                    if($end <= $tot_ep)
+                    if ($end <= $tot_ep)
                         $button =  ["text" => "$start-$end", "callback_data" => "Anime:showEpisodesList|$id|$list_index|$delete_message"];
                     else
-                        $button =  ["text" => "$start-".$tot_ep, "callback_data" => "Anime:showEpisodesList|$id|$list_index|$delete_message"];
-                    
-                    if($x < 4)
+                        $button =  ["text" => "$start-" . $tot_ep, "callback_data" => "Anime:showEpisodesList|$id|$list_index|$delete_message"];
+
+                    if ($x < 4)
                         $x++;
                     else {
                         $y++;
@@ -176,20 +181,20 @@ class AnimeController extends QueryController {
                     }
                     $menu[$y][] = $button;
                 }
-            }else{ //Ragruppamento normale 1, 2, 3... in caso che abbia meno di 51 ep
-                foreach($episodes as $key => $episode){
-                    if($key < 9) {
+            } else { //Ragruppamento normale 1, 2, 3... in caso che abbia meno di 51 ep
+                foreach ($episodes as $key => $episode) {
+                    if ($key < 9) {
                         $ep = $key + 1;
                         $ep = "0$ep";
-                    }else
+                    } else
                         $ep = $key + 1;
                     $button = ["text" => $ep, "callback_data" => "Player:play|$id|$episode->episodeNumber|1"];
-                    if($x < 4)
+                    if ($x < 4)
                         $x++;
                     else {
                         $y++;
                         $x = 1;
-                    } 
+                    }
                     $menu[$y][] = $button;
                 }
                 /*if($tot_ep < 26 && $tot_ep > 1){
@@ -201,57 +206,59 @@ class AnimeController extends QueryController {
                 $menu[] = [["text" => "✨ EPISODI SPECIALI", "callback_data" => "episodes:specials_$id"]];
             }*/
             $menu[] = [["text" => get_button('it', 'back'), "callback_data" => "Anime:view|$id|$delete_message"]];
-            if(!$delete_message){
+            if (!$delete_message) {
                 $photo = $this->query->message->photo;
                 $this->query->message->edit_media($photo[array_key_last($photo)]->file_id, "*Seleziona il numero dell'episodio ⤵️*", $menu);
-            }else{
+            } else {
                 $this->query->message->delete();
                 $this->query->message->reply("*Seleziona il numero dell'episodio ⤵️*", $menu);
             }
-        }else{
+        } else {
             $this->query->alert("Al momento gli episodi di questo anime non sono disponibili!", true);
         }
     }
 
-    public function showEpisodesList($id, $index, $delete_message) {
+    public function showEpisodesList($id, $index, $delete_message)
+    {
         $this->query->alert();
-        $next_index = $index + 50; $prev_index = $index - 50;
+        $next_index = $index + 50;
+        $prev_index = $index - 50;
         $episodes = $this->conn->rqueryAll("SELECT episodeNumber FROM episodes WHERE anime = ? AND episodetype = 1 ORDER by episodeNumber LIMIT $index, 51", $id);
-        $x = 0; $y = 0;
-        foreach($episodes as $key => $episode){ 
-            if($key < 50) {
+        $x = 0;
+        $y = 0;
+        foreach ($episodes as $key => $episode) {
+            if ($key < 50) {
                 $key += $index;
-                if($key < 9){
+                if ($key < 9) {
                     $ep = $key + 1;
                     $ep = "0$ep";
-                }else
+                } else
                     $ep = $key + 1;
-                
+
                 $button =  ["text" => $ep, "callback_data" => "Player:play|$id|$episode->episodeNumber|1"];
-                if($x < 5)
+                if ($x < 5)
                     $x++;
-                else{
-                    $y ++;
+                else {
+                    $y++;
                     $x = 1;
                 }
                 $menu[$y][] = $button;
             }
         }
-        if(count($episodes) == 51){
-            if($index == 0)
+        if (count($episodes) == 51) {
+            if ($index == 0)
                 $menu[] = [["text" => "ᐅ ᐅ ᐅ", "callback_data" => "Anime:showEpisodesList|$id|$next_index|$delete_message"]];
             else
-                $menu[] = [["text" => "ᐊ ᐊ ᐊ", "callback_data" => "Anime:showEpisodesList|$id|$prev_index|$delete_message"],["text" => "ᐅ ᐅ ᐅ", "callback_data" => "Anime:showEpisodesList|$id|$next_index|$delete_message"]];
-            
-        }else
-            if($id > 0)
-                $menu[] = [["text" => "ᐊ ᐊ ᐊ", "callback_data" => "Anime:showEpisodesList|$id|$prev_index|$delete_message"]];
-            
+                $menu[] = [["text" => "ᐊ ᐊ ᐊ", "callback_data" => "Anime:showEpisodesList|$id|$prev_index|$delete_message"], ["text" => "ᐅ ᐅ ᐅ", "callback_data" => "Anime:showEpisodesList|$id|$next_index|$delete_message"]];
+        } else
+            if ($id > 0)
+            $menu[] = [["text" => "ᐊ ᐊ ᐊ", "callback_data" => "Anime:showEpisodesList|$id|$prev_index|$delete_message"]];
+
         $menu[] = [["text" => "◀️ INDIETRO", "callback_data" => "Anime:showEpisodes|$id|$delete_message"]];
-        if(!$delete_message){
+        if (!$delete_message) {
             $photo = $this->query->message->photo;
             $this->query->message->edit_media($photo[array_key_last($photo)]->file_id, "*Seleziona il numero dell'episodio ⤵️*", $menu);
-        }else{
+        } else {
             $this->query->message->delete();
             $this->query->message->reply("*Seleziona il numero dell'episodio ⤵️*", $menu);
         }

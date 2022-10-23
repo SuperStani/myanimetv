@@ -16,15 +16,18 @@
     "autoload": {
         "psr-4": {
             "superbot\\App\\": "app/",
-            "superbot\\Telegram\\": "vendor/superbot/Telegram/src/",
-            "superbot\\Database\\": "vendor/superbot/Database/"
+            "superbot\\Telegram\\": "superbot/Telegram/",
+            "superbot\\Database\\": "superbot/Storage/"
         }
     },
-
+    
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
         "process-timeout": 3600
+    },
+    "require": {
+        "php-di/php-di": "^6.4"
     }
 }

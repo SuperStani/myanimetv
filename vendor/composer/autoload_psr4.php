@@ -6,7 +6,12 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'superbot\\Telegram\\' => array($vendorDir . '/superbot/Telegram/src'),
-    'superbot\\Database\\' => array($vendorDir . '/superbot/Database'),
+    'superbot\\Telegram\\' => array($baseDir . '/superbot/Telegram'),
+    'superbot\\Database\\' => array($baseDir . '/superbot/Storage'),
     'superbot\\App\\' => array($baseDir . '/app'),
+    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
+    'PhpDocReader\\' => array($vendorDir . '/php-di/phpdoc-reader/src/PhpDocReader'),
+    'Laravel\\SerializableClosure\\' => array($vendorDir . '/laravel/serializable-closure/src'),
+    'Invoker\\' => array($vendorDir . '/php-di/invoker/src'),
+    'DI\\' => array($vendorDir . '/php-di/php-di/src'),
 );
