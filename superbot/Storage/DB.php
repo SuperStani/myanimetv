@@ -1,11 +1,8 @@
 <?php
 
 namespace superbot\Storage;
-
 use PDO;
-use Exception;
 use PDOException;
-use superbot\Telegram\Client;
 
 class DB
 {

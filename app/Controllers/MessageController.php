@@ -2,7 +2,7 @@
 
 namespace superbot\App\Controllers;
 
-use app\Logger\Log;
+use superbot\App\Logger\Log;
 use superbot\Telegram\Message;
 use superbot\Telegram\User;
 use superbot\Storage\DB;

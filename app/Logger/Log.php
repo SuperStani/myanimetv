@@ -1,10 +1,10 @@
 <?php
 
-namespace app\Logger;
-
+namespace superbot\App\Logger;
+use superbot\Storage\DB;    
 class Log
 {
-    private static $conn;
+    private $conn;
     public function __construct(DB $conn) {
         $this->conn = $conn;
     }

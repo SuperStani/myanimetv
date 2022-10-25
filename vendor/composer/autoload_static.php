@@ -14,7 +14,7 @@ class ComposerStaticInit6e8df4c1c1bf6d08656f1271b3510457
         's' => 
         array (
             'superbot\\Telegram\\' => 18,
-            'superbot\\Database\\' => 18,
+            'superbot\\Storage\\' => 17,
             'superbot\\App\\' => 13,
         ),
         'P' => 
@@ -41,7 +41,7 @@ class ComposerStaticInit6e8df4c1c1bf6d08656f1271b3510457
         array (
             0 => __DIR__ . '/../..' . '/superbot/Telegram',
         ),
-        'superbot\\Database\\' => 
+        'superbot\\Storage\\' => 
         array (
             0 => __DIR__ . '/../..' . '/superbot/Storage',
         ),
@@ -167,6 +167,7 @@ class ComposerStaticInit6e8df4c1c1bf6d08656f1271b3510457
         'Psr\\Container\\ContainerInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerInterface.php',
         'Psr\\Container\\NotFoundExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/NotFoundExceptionInterface.php',
         'superbot\\App\\Configs\\DBConfigs' => __DIR__ . '/../..' . '/app/Configs/DBConfigs.php',
+        'superbot\\App\\Configs\\GeneralConfigs' => __DIR__ . '/../..' . '/app/Configs/GeneralConfigs.php',
         'superbot\\App\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Controllers/Controller.php',
         'superbot\\App\\Controllers\\MessageController' => __DIR__ . '/../..' . '/app/Controllers/MessageController.php',
         'superbot\\App\\Controllers\\Messages\\CommandController' => __DIR__ . '/../..' . '/app/Controllers/Messages/CommandController.php',
@@ -186,7 +187,10 @@ class ComposerStaticInit6e8df4c1c1bf6d08656f1271b3510457
         'superbot\\App\\Controllers\\Query\\SettingsController' => __DIR__ . '/../..' . '/app/Controllers/Query/SettingsController.php',
         'superbot\\App\\Controllers\\Query\\SimulcastController' => __DIR__ . '/../..' . '/app/Controllers/Query/SimulcastController.php',
         'superbot\\App\\Controllers\\Query\\TopController' => __DIR__ . '/../..' . '/app/Controllers/Query/TopController.php',
+        'superbot\\App\\Logger\\Log' => __DIR__ . '/../..' . '/app/Logger/Log.php',
         'superbot\\App\\Routing\\Route' => __DIR__ . '/../..' . '/app/Routing/Route.php',
+        'superbot\\Storage\\CacheService' => __DIR__ . '/../..' . '/superbot/Storage/CacheService.php',
+        'superbot\\Storage\\DB' => __DIR__ . '/../..' . '/superbot/Storage/DB.php',
         'superbot\\Telegram\\Api' => __DIR__ . '/../..' . '/superbot/Telegram/Api.php',
         'superbot\\Telegram\\Client' => __DIR__ . '/../..' . '/superbot/Telegram/Client.php',
         'superbot\\Telegram\\Message' => __DIR__ . '/../..' . '/superbot/Telegram/Message.php',

@@ -6,7 +6,7 @@ use superbot\Telegram\Query;
 use superbot\Telegram\User;
 use superbot\Storage\DB;
 use superbot\Storage\CacheService;
-
+use superbot\App\Logger\Log;
 class QueryController extends Controller
 {
     public function __construct(Query $query, DB $conn, User $user, CacheService $cacheService, Log $logger)
