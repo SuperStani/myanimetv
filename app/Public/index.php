@@ -2,11 +2,12 @@
 header('Access-Control-Allow-Origin: https://webapp.myanimetv.org');
 ini_set('display_errors', true);
 error_reporting(E_ALL);
-require_once __DIR__ . "/vendor/autoload.php";
-require __DIR__ . "/app/langs/getlang.php";
+require_once __DIR__ . "/../../vendor/autoload.php";
+require __DIR__ . "/../langs/getlang.php";
 
 use superbot\App\Routing\Route;
 use superbot\Telegram\Update;
+use superbot\Telegram\Client;
 
 //WebApp update
 if (isset($_GET["webapp"], $_GET["hash"], $_GET["to_user"], $_GET["anime"])) {

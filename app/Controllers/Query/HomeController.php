@@ -3,7 +3,7 @@ namespace superbot\App\Controllers\Query;
 use superbot\App\Controllers\QueryController;
 use superbot\Database\DB;
 use superbot\Telegram\Client;
-use superbot\App\Config\GeneralConfigs as cfg;
+use superbot\App\Configs\GeneralConfigs as cfg;
 class HomeController extends QueryController {
     public function start() {
         $this->user->page();

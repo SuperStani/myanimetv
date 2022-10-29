@@ -26,28 +26,26 @@ use superbot\Telegram\Update;
 use superbot\Telegram\User;
 use superbot\Storage\DB;
 use superbot\Storage\CacheService;
-use app\Logger\Log;
+use superbot\App\Logger\Log;
 
 use \DI\ContainerBuilder;
 use \Redis;
 use PDO;
 
 $conf = [
-    DB::class => DI\factory(function () {
-        try {
-            return new PDO("mysql:host=" . DBConfigs::$dbhost . ";dbname=" . DBConfigs::$dbname, DBConfigs::$dbuser, DBConfigs::$dbpassword);
-        } catch (PDOException $e) {
-            Log::warning($e->getMessage());
-        }
+    PDO::class => DI\factory(function () {
+        return new PDO("mysql:host=" . DBConfigs::$dbhost . ";dbname=" . DBConfigs::$dbname, DBConfigs::$dbuser, DBConfigs::$dbpassword);
     }),
+    Redis::class => DI\factory(function() {
+        $redis = new Redis();
+        $redis->connect(DBConfigs::$redishost, DBConfigs::$redisport);
+        return $redis;
+    }),
+    DB::class => DI\autowire(),
     Log::class => DI\autowire(),
-    CacheService::class => \DI\factory(function () {
-        $r = new Redis();
-        $r->connect(DBConfigs::$redishost, DBConfigs::$redisport);
-        return $r;
-    }),
+    CacheService::class => DI\autowire(),
     Query::class => DI\factory(function () {
-        return new Message(Update::get()->callback_query);
+        return new Query(Update::get()->callback_query);
     }),
 
     Message::class => DI\factory(function () {
@@ -59,7 +57,7 @@ $conf = [
         if (isset($update->message)) {
             return new User($update->message->from, $db, $cache);
         } elseif (isset($update->callback_query)) {
-            return new User($update->message->from, $db, $cache);
+            return new User($update->callback_query->from, $db, $cache);
         }
     }),
 
@@ -84,5 +82,5 @@ $conf = [
 ];
 
 $builder = new ContainerBuilder();
-$builder->addDefinitions();
+$builder->addDefinitions($conf);
 return $builder->build();

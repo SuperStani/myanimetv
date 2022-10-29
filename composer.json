@@ -17,7 +17,7 @@
         "psr-4": {
             "superbot\\App\\": "app/",
             "superbot\\Telegram\\": "superbot/Telegram/",
-            "superbot\\Database\\": "superbot/Storage/"
+            "superbot\\Storage\\": "superbot/Storage/"
         }
     },
     
