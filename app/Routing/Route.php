@@ -4,6 +4,7 @@ namespace superbot\App\Routing;
 
 use superbot\App\Logger\Log;
 use superbot\Telegram\Client;
+
 class Route
 {
 
@@ -21,6 +22,7 @@ class Route
     {
         $e = explode(":", $update->callback_query->data);
         $controller = $e[0] . 'Controller';
+        $controller = 'superbot\\App\\Controllers\\Query\\' . $controller;
         if (class_exists($controller)) {
             $params = explode("|", $e[1]);
             $method = $params[0];

@@ -45,7 +45,7 @@ $conf = [
     Log::class => DI\autowire(),
     CacheService::class => DI\autowire(),
     Query::class => DI\factory(function () {
-        return new Message(Update::get()->callback_query);
+        return new Query(Update::get()->callback_query);
     }),
 
     Message::class => DI\factory(function () {
@@ -57,7 +57,7 @@ $conf = [
         if (isset($update->message)) {
             return new User($update->message->from, $db, $cache);
         } elseif (isset($update->callback_query)) {
-            return new User($update->message->from, $db, $cache);
+            return new User($update->callback_query->from, $db, $cache);
         }
     }),
 
