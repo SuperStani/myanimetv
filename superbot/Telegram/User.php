@@ -2,7 +2,7 @@
 
 namespace superbot\Telegram;
 use superbot\Telegram\Client;
-use superbot\Storage\DB;
+use superbot\App\Storage\Repositories\UserRepository;
 use superbot\Storage\CacheService;
 
 class User {
@@ -12,7 +12,11 @@ class User {
     public string $mention;
     public $page;
 
-    public function __construct($user, DB $conn, CacheService $cacheService)
+    public function __construct(
+        $user, 
+        UserRepository $userRepo, 
+        CacheService $cacheService
+    )
     {
         $this->id = $user->id;
         $this->name = $user->first_name;
