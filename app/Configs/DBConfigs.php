@@ -3,7 +3,7 @@
 namespace superbot\App\Configs;
 
 class DBConfigs {
-    public static $dbname = "myanimetv2";
+    public static $dbname = "netfluzmax";
     public static $dbhost = "localhost";
     public static $dbuser = "admin";
     public static $dbpassword = "@Naruto96";
