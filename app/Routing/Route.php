@@ -4,23 +4,24 @@ namespace superbot\App\Routing;
 
 use superbot\App\Logger\Log;
 use superbot\Telegram\Client;
+use superbot\Telegram\Update;
 
 class Route
 {
 
-    public static function processUpdate($update)
+    public static function processUpdate(Update $update)
     {
         $container = require __DIR__ . "/../Configs/DIConfigs.php";
-        if (isset($update->message)) {
+        if ($update->getType() == 'Message') {
             self::getMessage($container, $update);
         } else {
             self::getCallbackData($container, $update);
         }
     }
 
-    private static function getCallbackData($container, $update)
+    private static function getCallbackData($container, Update $update)
     {
-        $e = explode(":", $update->callback_query->data);
+        $e = explode(":", $update->getUpdate()->data);
         $controller = $e[0] . 'Controller';
         $controller = 'superbot\\App\\Controllers\\Query\\' . $controller;
         if (class_exists($controller)) {
@@ -35,9 +36,9 @@ class Route
         }
     }
 
-    private static function getMessage($container, $update)
+    private static function getMessage($container, Update $update)
     {
-        if (isset($update->message->entities) and $update->message->entities[0]->type == "bot_command") {
+        if (isset($update->getUpdate()->entities) and $update->getUpdate()->entities[0]->type == "bot_command") {
             $controller = $container->get('superbot\App\Controllers\Messages\CommandController');
             return $controller->callAction('check', []);
         } else {

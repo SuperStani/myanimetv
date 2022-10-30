@@ -44,9 +44,11 @@ $conf = [
         return $redis;
     }),
 
-    Update::class => factory(function() {
-        $update = Update::get();
-        return (isset($update->message)) ? $update->message : ((isset($update->callback_query)) ? $update->callback_query : '');
+    Update::class => factory(function(ContainerInterface $c) {
+        return $c->get(Update::class);
+        /*$update = Update::get();
+
+        return (isset($update->message)) ? new Update($update->message) : ((isset($update->callback_query)) ? new Update($update->callback_query) : '');*/
     }),
 
     DB::class => autowire(),

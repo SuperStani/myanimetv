@@ -38,9 +38,14 @@ if (isset($_GET["webapp"], $_GET["hash"], $_GET["to_user"], $_GET["anime"])) {
             $update = Update::getFakeUpdate($user, "Player:play|$anime|$isEpisode|-1");
         else
             $update = Update::getFakeUpdate($user, "Anime:view|$anime|-1");
+        $update = new Update($update->callback_query, 'callback_query');
     } else //Fake update
         die();
-} else //Bot update
+} else {//Bot update
     $update = Update::get();
+    $update = (isset($update->callback_query)) ? new Update($update->callback_query, 'callback_query') 
+                : ((isset($update->message)) ? new Update($update->message, 'message') : null);
+} 
 
-Route::processUpdate($update);
+if($update !== null)
+    Route::processUpdate($update);

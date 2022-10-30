@@ -20,6 +20,7 @@ class UserController extends Controller
         Update $user,
         UserRepository $userRepo
     ) {
+        $user = $user->getUpdate();
         $this->id = $user->from->id;
         $this->name = $user->from->first_name;
         $this->mention = "[" . $user->from->first_name . "](tg://user?id=" . $user->from->id . ")";

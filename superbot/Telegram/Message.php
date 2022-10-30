@@ -9,6 +9,7 @@ class Message {
     public $keyboard;
     public function __construct(Update $message)
     {
+        $message = $message->getUpdate();
         $this->text = $message->text;
         $this->id = $message->message_id;
         $this->chat_id = $message->chat->id;

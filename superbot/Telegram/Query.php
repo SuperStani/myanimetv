@@ -10,7 +10,8 @@ class Query
     public $data, $id;
     public $chat_id;
     public function __construct(Update $update)
-    {
+    {   
+        $update = $update->getUpdate();
         $this->data = $update->data;
         $this->id = $update->id;
         $this->message = new Message($update->message);
