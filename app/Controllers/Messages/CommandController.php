@@ -45,7 +45,8 @@ class CommandController extends MessageController
                 $menu[] = [["text" => "➕ ADD NEW MOVIE", "callback_data" => "Post:new"]];
             $menu[] = [["text" => get_button('it', 'search'), "callback_data" => "Search:home|0"], ["text" => get_button('it', 'profile'), "callback_data" => "Profile:me|0"]];
             $menu[] = [["text" => get_button('it', 'top'), "callback_data" => "Top:home"]];
-            if(($text = $this->cacheService->getStartMessage()) == null) {
+            $text = $this->cacheService->getStartMessage();
+            if($text == null) {
                 $text = get_string(
                     'it',
                     'home',
