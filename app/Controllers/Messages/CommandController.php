@@ -45,14 +45,17 @@ class CommandController extends MessageController
                 $menu[] = [["text" => "➕ ADD NEW MOVIE", "callback_data" => "Post:new"]];
             $menu[] = [["text" => get_button('it', 'search'), "callback_data" => "Search:home|0"], ["text" => get_button('it', 'profile'), "callback_data" => "Profile:me|0"]];
             $menu[] = [["text" => get_button('it', 'top'), "callback_data" => "Top:home"]];
-            $text = get_string(
-                'it',
-                'home',
-                $this->user->mention,
-                $this->userRepo->getTotalUsers(),
-                $this->movieRepo->getTotalMovies(),
-                $this->movieRepo->getTotalEpisodes()
-            );
+            if(($text = $this->cacheService->getStartMessage()) == null) {
+                $text = get_string(
+                    'it',
+                    'home',
+                    $this->user->mention,
+                    $this->userRepo->getTotalUsers(),
+                    $this->movieRepo->getTotalMovies(),
+                    $this->movieRepo->getTotalEpisodes()
+                );
+                $this->cacheService->setStartMessage($text);
+            }
             return $this->message->reply($text, $menu);
         } else {
             $param = explode("_", $param);

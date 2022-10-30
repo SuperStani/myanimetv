@@ -7,7 +7,7 @@ use superbot\App\Storage\DB;
 class MovieRepository
 {
     private $conn;
-    private static $table = 'movies';
+    private static $table = 'movie';
     public function __construct(DB $conn)
     {
         $this->conn = $conn;
