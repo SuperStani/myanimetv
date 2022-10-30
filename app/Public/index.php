@@ -8,7 +8,6 @@ require __DIR__ . "/../langs/getlang.php";
 use superbot\App\Routing\Route;
 use superbot\Telegram\Update;
 use superbot\Telegram\Client;
-
 //WebApp update
 if (isset($_GET["webapp"], $_GET["hash"], $_GET["to_user"], $_GET["anime"])) {
     $check_hash = $_GET["hash"];
@@ -38,9 +37,13 @@ if (isset($_GET["webapp"], $_GET["hash"], $_GET["to_user"], $_GET["anime"])) {
             $update = Update::getFakeUpdate($user, "Player:play|$anime|$isEpisode|-1");
         else
             $update = Update::getFakeUpdate($user, "Anime:view|$anime|-1");
+        $update = new Update($update->callback_query, 'callback_query');
     } else //Fake update
         die();
-} else //Bot update
+} else {//Bot update
     $update = Update::get();
+    $update = (isset($update->callback_query)) ? new Update($update->callback_query, 'callback_query') 
+                : ((isset($update->message)) ? new Update($update->message, 'message') : new Update($update->inline_query, 'inline_query'));
+} 
 
 Route::processUpdate($update);
