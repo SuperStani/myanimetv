@@ -5,17 +5,26 @@ namespace superbot\App\Routing;
 use superbot\App\Logger\Log;
 use superbot\Telegram\Client;
 use superbot\Telegram\Update;
-
+use function DI\factory;
 class Route
 {
 
     public static function processUpdate(Update $update)
     {
         $container = require __DIR__ . "/../Configs/DIConfigs.php";
-        if ($update->getType() == 'Message') {
+        $container->set(
+            Update::class, 
+            factory(function() {
+                global $update; 
+                return $update;
+            })
+        );
+        if ($update->getType() == 'message') {
             self::getMessage($container, $update);
-        } else {
+        } elseif($update->getType() == 'callback_query') {
             self::getCallbackData($container, $update);
+        } else {
+            return 0;
         }
     }
 

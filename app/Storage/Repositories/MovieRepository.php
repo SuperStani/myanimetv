@@ -15,7 +15,7 @@ class MovieRepository
 
     public function getTotalMovies(): int
     {
-        $query = "SELECT COUNT(*) AS tot FROM" . self::$table;
+        $query = "SELECT COUNT(*) AS tot FROM " . self::$table;
         return $this->conn->rquery($query)->tot;
     }
 

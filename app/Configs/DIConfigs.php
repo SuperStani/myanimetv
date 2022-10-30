@@ -44,12 +44,7 @@ $conf = [
         return $redis;
     }),
 
-    Update::class => factory(function(ContainerInterface $c) {
-        return $c->get(Update::class);
-        /*$update = Update::get();
-
-        return (isset($update->message)) ? new Update($update->message) : ((isset($update->callback_query)) ? new Update($update->callback_query) : '');*/
-    }),
+    Update::class => autowire(),
 
     DB::class => autowire(),
     RedisController::class => autowire(),
