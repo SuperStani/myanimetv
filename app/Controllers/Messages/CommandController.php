@@ -9,22 +9,23 @@ use superbot\Telegram\Client;
 use superbot\App\Configs\GeneralConfigs as cfg;
 use superbot\App\Controllers\UserController;
 use superbot\App\Logger\Log;
+use superbot\App\Services\CacheService;
 use superbot\App\Storage\Repositories\MovieRepository;
 use superbot\App\Storage\Repositories\UserRepository;
 use superbot\Telegram\Message;
-use superbot\Telegram\Update;
+
 
 class CommandController extends MessageController
 {
-    private $message;
-    private $user;
     private $movieRepo;
     private $userRepo;
+    private $cacheService;
     public function __construct(
         Message $message,
         UserController $user,
         MovieRepository $movieRepo,
         UserRepository $userRepo,
+        CacheService $cacheService,
         Log $logger
     ) {
         $this->message = $message;
@@ -32,6 +33,7 @@ class CommandController extends MessageController
         $this->logger = $logger;
         $this->movieRepo = $movieRepo;
         $this->userRepo = $userRepo;
+        $this->cacheService = $cacheService;
     }
 
     public function start($param = null)
@@ -40,7 +42,7 @@ class CommandController extends MessageController
             $this->user->save();
             $this->user->page();
             if ($this->user->isAdmin())
-                $menu[] = [["text" => "➕ ADD NEW movie", "callback_data" => "Post:new"]];
+                $menu[] = [["text" => "➕ ADD NEW MOVIE", "callback_data" => "Post:new"]];
             $menu[] = [["text" => get_button('it', 'search'), "callback_data" => "Search:home|0"], ["text" => get_button('it', 'profile'), "callback_data" => "Profile:me|0"]];
             $menu[] = [["text" => get_button('it', 'top'), "callback_data" => "Top:home"]];
             $text = get_string(

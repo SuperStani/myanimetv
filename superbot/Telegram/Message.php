@@ -7,7 +7,7 @@ class Message {
     public $text, $id, $chat_type, $chat_id;
     public $photo, $video;
     public $keyboard;
-    public function __construct($message)
+    public function __construct(Update $message)
     {
         $this->text = $message->text;
         $this->id = $message->message_id;

@@ -6,12 +6,19 @@ use superbot\Telegram\Query;
 use superbot\Telegram\User;
 use superbot\Storage\DB;
 use superbot\App\Logger\Log;
+
 class QueryController extends Controller
 {
-    public function __construct(Query $query, DB $conn, User $user, Log $logger)
-    {
+    protected $query;
+    protected $user;
+    protected $logger;
+    
+    public function __construct(
+        Query $query,
+        UserController $user,
+        Log $logger
+    ) {
         $this->query = $query;
-        $this->conn = $conn;
         $this->user = $user;
         $this->logger = $logger;
     }

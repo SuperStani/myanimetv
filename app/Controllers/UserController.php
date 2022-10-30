@@ -5,8 +5,10 @@ namespace superbot\App\Controllers;
 use superbot\App\Configs\GeneralConfigs;
 use superbot\Telegram\Client;
 use superbot\App\Storage\Repositories\UserRepository;
+use superbot\Telegram\Update;
 
-class UserController extends Controller {
+class UserController extends Controller
+{
     public $id;
     public $name;
     public $lastname;
@@ -15,37 +17,42 @@ class UserController extends Controller {
     private $userRepo;
 
     public function __construct(
-        $user, 
+        Update $user,
         UserRepository $userRepo
-    )
-    {
-        $this->id = $user->id;
-        $this->name = $user->first_name;
-        $this->mention = "[".$user->first_name."](tg://user?id=".$user->id.")";
+    ) {
+        $this->id = $user->from->id;
+        $this->name = $user->from->first_name;
+        $this->mention = "[" . $user->from->first_name . "](tg://user?id=" . $user->from->id . ")";
         $this->userRepo = $userRepo;
     }
 
-    public function getMe() {
+    public function getMe()
+    {
         return Client::getChat($this->id)->result;
     }
 
-    public function save(){
+    public function save()
+    {
         $this->userRepo->save($this->id);
     }
 
-    public function update() {
+    public function update()
+    {
         $this->userRepo->updateLastAction($this->id);
     }
-    
-    public function page($text = null){
+
+    public function page($text = null)
+    {
         $this->userRepo->page($this->id, $text);
     }
 
-    public function getPage(){
+    public function getPage()
+    {
         return $this->userRepo->getpage($this->id);
     }
 
-    public function isAdmin(){
+    public function isAdmin()
+    {
         return in_array($this->id, GeneralConfigs::$admins);
     }
 
@@ -73,5 +80,4 @@ class UserController extends Controller {
     {
         return $this->userRepo->getMoviesHistory($this->id);
     }
-
 }

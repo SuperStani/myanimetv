@@ -13,12 +13,14 @@ class MovieRepository
         $this->conn = $conn;
     }
 
-    public function getTotalMovies() : int {
+    public function getTotalMovies(): int
+    {
         $query = "SELECT COUNT(*) AS tot FROM" . self::$table;
         return $this->conn->rquery($query)->tot;
     }
 
-    public function getTotalEpisodes() : int {
+    public function getTotalEpisodes(): int
+    {
         $query = "SELECT COUNT(*) AS tot FROM episodes";
         return $this->conn->rquery($query)->tot;
     }

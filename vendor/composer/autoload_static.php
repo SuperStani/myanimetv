@@ -190,7 +190,9 @@ class ComposerStaticInit6e8df4c1c1bf6d08656f1271b3510457
         'superbot\\App\\Controllers\\UserController' => __DIR__ . '/../..' . '/app/Controllers/UserController.php',
         'superbot\\App\\Logger\\Log' => __DIR__ . '/../..' . '/app/Logger/Log.php',
         'superbot\\App\\Routing\\Route' => __DIR__ . '/../..' . '/app/Routing/Route.php',
+        'superbot\\App\\Services\\CacheService' => __DIR__ . '/../..' . '/app/Services/CacheService.php',
         'superbot\\App\\Storage\\DB' => __DIR__ . '/../..' . '/app/Storage/DB.php',
+        'superbot\\App\\Storage\\RedisController' => __DIR__ . '/../..' . '/app/Storage/RedisController.php',
         'superbot\\App\\Storage\\Repositories\\MovieRepository' => __DIR__ . '/../..' . '/app/Storage/Repositories/MovieRepository.php',
         'superbot\\App\\Storage\\Repositories\\UserRepository' => __DIR__ . '/../..' . '/app/Storage/Repositories/UserRepository.php',
         'superbot\\Storage\\CacheService' => __DIR__ . '/../..' . '/superbot/Storage/CacheService.php',
@@ -201,7 +203,6 @@ class ComposerStaticInit6e8df4c1c1bf6d08656f1271b3510457
         'superbot\\Telegram\\Query' => __DIR__ . '/../..' . '/superbot/Telegram/Query.php',
         'superbot\\Telegram\\Request' => __DIR__ . '/../..' . '/superbot/Telegram/Request.php',
         'superbot\\Telegram\\Update' => __DIR__ . '/../..' . '/superbot/Telegram/Update.php',
-        'superbot\\Telegram\\User' => __DIR__ . '/../..' . '/superbot/Telegram/User.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

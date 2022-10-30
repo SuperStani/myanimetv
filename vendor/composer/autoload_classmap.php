@@ -124,7 +124,9 @@ return array(
     'superbot\\App\\Controllers\\UserController' => $baseDir . '/app/Controllers/UserController.php',
     'superbot\\App\\Logger\\Log' => $baseDir . '/app/Logger/Log.php',
     'superbot\\App\\Routing\\Route' => $baseDir . '/app/Routing/Route.php',
+    'superbot\\App\\Services\\CacheService' => $baseDir . '/app/Services/CacheService.php',
     'superbot\\App\\Storage\\DB' => $baseDir . '/app/Storage/DB.php',
+    'superbot\\App\\Storage\\RedisController' => $baseDir . '/app/Storage/RedisController.php',
     'superbot\\App\\Storage\\Repositories\\MovieRepository' => $baseDir . '/app/Storage/Repositories/MovieRepository.php',
     'superbot\\App\\Storage\\Repositories\\UserRepository' => $baseDir . '/app/Storage/Repositories/UserRepository.php',
     'superbot\\Storage\\CacheService' => $baseDir . '/superbot/Storage/CacheService.php',
@@ -135,5 +137,4 @@ return array(
     'superbot\\Telegram\\Query' => $baseDir . '/superbot/Telegram/Query.php',
     'superbot\\Telegram\\Request' => $baseDir . '/superbot/Telegram/Request.php',
     'superbot\\Telegram\\Update' => $baseDir . '/superbot/Telegram/Update.php',
-    'superbot\\Telegram\\User' => $baseDir . '/superbot/Telegram/User.php',
 );
