@@ -12,9 +12,8 @@ class SearchController extends QueryController
     public function home($delete_message, $options = 0)
     {
         if ($options) {
-            $webapp = cfg::get("webapp") . "search";
             $menu[] = [["text" => get_button('it', 'advanced_search_on'), "callback_data" => "Search:home|0"]];
-            $menu[] = [["text" => get_button("it", "history"), "web_app" => ["url" => "$webapp/history/{$this->user->id}"]], ["text" => get_button("it", "category"), "callback_data" => "Search:byCategory"]];
+            $menu[] = [["text" => get_button("it", "history"), "callback_data" => "Search:byHistory"], ["text" => get_button("it", "category"), "callback_data" => "Search:byCategory"]];
             $menu[] = [["text" => get_button("it", "genres_search"), "callback_data" => "Search:byGenres"], ["text" => get_button("it", "a-z-list"), "callback_data" => "Search:byList"]];
             $menu[] = [["text" => get_button("it", "ep_search"), "callback_data" => "Search:byEpisodesNumber"], ["text" => get_button("it", "random"), "callback_data" => "Search:random|1"]];
             $menu[] = [["text" => get_button("it", "year_search"), "callback_data" => "Search:byYear|0"], ["text" => get_button("it", "studio_search"), "callback_data" => "Search:byStudio|0"]];

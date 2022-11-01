@@ -5,26 +5,23 @@ namespace superbot\App\Routing;
 use superbot\App\Logger\Log;
 use superbot\Telegram\Client;
 use superbot\Telegram\Update;
+use superbot\App\Controllers\UserController;
 use function DI\factory;
+
 class Route
 {
 
     public static function processUpdate(Update $update)
     {
         $container = require __DIR__ . "/../Configs/DIConfigs.php";
-        $container->set(
-            Update::class, 
-            factory(function() {
-                global $update; 
-                return $update;
-            })
-        );
+        $container->set(Update::class, factory(function () {
+            global $update;
+            return $update;
+        }));
         if ($update->getType() == 'message') {
             self::getMessage($container, $update);
-        } elseif($update->getType() == 'callback_query') {
-            self::getCallbackData($container, $update);
         } else {
-            return 0;
+            self::getCallbackData($container, $update);
         }
     }
 
@@ -51,16 +48,16 @@ class Route
             $controller = $container->get('superbot\App\Controllers\Messages\CommandController');
             return $controller->callAction('check', []);
         } else {
-            $user = $container->get(User::class);
+            $user = $container->get(UserController::class);
             $e = explode(":", $user->getPage());
-            $user = null;
             if (isset($e[1])) { //Se ci sono parametri nel page
                 $section = $e[0]; //la sezione
                 $params = explode("|", $e[1]); //Parametri
                 $method = $params[0];
                 unset($params[0]); //Aggiusto i parametri
-                $controller = $section . 'Controller';
+                $controller =  "superbot\App\Controllers\Messages\\" . $section . "Controller";
                 if (class_exists($controller)) {
+                    $container->injectOn($user);
                     $controller = $container->get($controller);
                     return $controller->callAction($method, $params);
                 }

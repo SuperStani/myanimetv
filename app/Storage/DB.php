@@ -60,7 +60,12 @@ class DB
             $q->bindParam($key, $value);
         }
         try {
-            $q->execute();
+            try{
+                $q->execute();
+            }catch(PDOException $e) {
+                print($e->getMessage());
+            }
+            
             try {
                 $q = $conn->lastInsertId();
             } catch (PDOException $e) {
@@ -69,7 +74,7 @@ class DB
             $conn = null;
             return $q;
         } catch (PDOException $e) {
-            return $e->getMessage();
+            echo $e->getMessage();
         }
     }
 }

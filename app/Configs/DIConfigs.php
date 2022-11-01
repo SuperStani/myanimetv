@@ -42,35 +42,7 @@ $conf = [
         $redis = new Redis();
         $redis->connect(DBConfigs::$redishost, DBConfigs::$redisport);
         return $redis;
-    }),
-
-    Update::class => autowire(),
-
-    DB::class => autowire(),
-    RedisController::class => autowire(),
-    CacheService::class => autowire(),
-    Log::class => autowire(),
-    CacheService::class => autowire(),
-    Query::class => autowire(),
-    Message::class => autowire(),
-    Controller::class => autowire(),
-    MessageController::class => autowire(),
-    QueryController::class => autowire(),
-    MessagePostController::class => autowire(),
-    MessageHomeController::class => autowire(),
-    MessageSearchController::class => autowire(),
-    MessageSettingsController::class => autowire(),
-    CommandController::class => autowire(),
-    AnimeController::class => autowire(),
-    BookmarkController::class => autowire(),
-    LeadershipController::class => autowire(),
-    HomeController::class => autowire(),
-    PlayerController::class => autowire(),
-    PostController::class => autowire(),
-    ProfileController::class => autowire(),
-    SearchController::class => autowire(),
-    SettingsController::class => autowire(),
-    SimulcastController::class => autowire(),
+    })
 ];
 
 $builder = new ContainerBuilder();

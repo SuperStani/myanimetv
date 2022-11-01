@@ -9,12 +9,12 @@ class Query
     public $message;
     public $data, $id;
     public $chat_id;
-    public function __construct(Update $update)
+    public function __construct(Update $update, Message $message)
     {   
         $update = $update->getUpdate();
         $this->data = $update->data;
         $this->id = $update->id;
-        $this->message = new Message($update->message);
+        $this->message = $message;
         $update = null;
     }
 

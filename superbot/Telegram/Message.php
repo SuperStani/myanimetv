@@ -7,9 +7,11 @@ class Message {
     public $text, $id, $chat_type, $chat_id;
     public $photo, $video;
     public $keyboard;
-    public function __construct(Update $message)
+    public function __construct(Update $update)
     {
-        $message = $message->getUpdate();
+        $message = $update->getUpdate();
+        if($update->getType() == 'callback_query') 
+            $message = $message->message;
         $this->text = $message->text;
         $this->id = $message->message_id;
         $this->chat_id = $message->chat->id;

@@ -19,6 +19,6 @@ class RedisController
 
     public function set($name, $value, $ex = null)
     {
-        return $this->conn->set($name, $value, ['nx', 'ex' => $ex]);
+        return $this->conn->set($name, $value, ['NX', 'EX' => $ex]);
     }
 }

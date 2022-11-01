@@ -16,6 +16,7 @@ class GeneralConfigs
         154658214, //Ester
         156371150, //Fra9898
         808699539, //GiorgioAmbulante69
-        856835224 //Yukumi
+        856835224, //Yukumi,
+        170172016
     ];
 }
